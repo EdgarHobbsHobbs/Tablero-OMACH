@@ -124,6 +124,7 @@ textarea{font:inherit;color:var(--text);width:100%;padding:7px 9px;border:1px so
 .logo{display:inline-block;height:22px;width:133px;background:var(--logo) center/contain no-repeat;flex:none}
 :root[data-theme="dark"] .logo{filter:invert(1)}
 .lp{display:none}
+.cl2{cursor:pointer}
 .shell{display:flex;align-items:stretch;min-height:calc(100vh - 70px)}
 .side{width:176px;flex:none;background:var(--card);border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:4px}
 .nv{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--text);font:inherit;font-weight:600;padding:10px 12px;border-radius:10px;cursor:pointer;text-align:left}
@@ -271,7 +272,7 @@ textarea{font:inherit;color:var(--text);width:100%;padding:7px 9px;border:1px so
 </head>
 <body>
 <header><div class="wrap hr"><div class="brand"><span class="logo" role="img" aria-label="OMACH"></span><span class="vb"></span><div><h1>Tablero BIM · Equipo</h1><div class="sub">Actividades, inconsistencias e interferencias en un solo lugar</div></div></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="sub" id="me"></span><button class="hb" id="th" title="Modo claro/oscuro">🌙</button><button class="hb" id="out">Salir</button><button class="hb" id="hbtn">🕘<span class="hl"> Historial</span><span class="badge" id="hbadge" style="display:none"></span></button></div></div></header>
-<div class="shell"><nav class="side"><button class="nv on" data-v="tab"><span class="ic">📋</span><span>Tablero</span></button><button class="nv" data-v="cal"><span class="ic">📅</span><span>Calendario</span></button><button class="nv" data-v="notas"><span class="ic">🗒️</span><span>Notas</span></button><button class="nv" data-v="rfi"><span class="ic">❓</span><span>RFIs</span><span class="nbd" id="rf-badge"></span></button><a class="nv" href="https://tecmx.sharepoint.com/:x:/s/CONCENTRACIONBIM/IQAqX7IYvk73RZWUQ68ifBn6AQGeueipadA7TbV03JEH44I?e=fl6nEV" target="_blank" rel="noopener"><span class="ic">📑</span><span>Agenda</span><span class="ex">↗</span></a></nav><div class="main">
+<div class="shell"><nav class="side"><button class="nv on" data-v="tab"><span class="ic">📋</span><span>Tablero</span></button><button class="nv" data-v="cal"><span class="ic">📅</span><span>Calendario</span></button><button class="nv" data-v="notas"><span class="ic">🗒️</span><span>Notas</span></button><button class="nv" data-v="rfi"><span class="ic">❓</span><span>Aclaraciones</span><span class="nbd" id="rf-badge"></span></button><a class="nv" href="https://tecmx.sharepoint.com/:x:/s/CONCENTRACIONBIM/IQAqX7IYvk73RZWUQ68ifBn6AQGeueipadA7TbV03JEH44I?e=fl6nEV" target="_blank" rel="noopener"><span class="ic">📑</span><span>Agenda</span><span class="ex">↗</span></a></nav><div class="main">
 <div class="wrap" id="v-tab">
  <div id="hist" style="display:none"></div>
  <div class="top" id="stats"></div>
@@ -294,7 +295,7 @@ textarea{font:inherit;color:var(--text);width:100%;padding:7px 9px;border:1px so
   <div id="f-elw"><span class="l">ID de elemento (Revit / Navisworks)</span><input type="text" id="f-el" placeholder="Ej. 483920 / 512004" maxlength="150"></div>
   <div class="w"><span class="l req">Disciplinas involucradas</span><div class="dsc" id="f-dis"><label><input type="checkbox" value="Arquitectura">Arquitectura</label><label><input type="checkbox" value="Estructural">Estructural</label><label><input type="checkbox" value="MEP">MEP</label><label><input type="checkbox" value="Topográfico">Topográfico</label></div></div>
   <div class="w"><span class="l req">Descripción (qué ocurre y qué se espera)</span><textarea id="f-ds" maxlength="800"></textarea></div>
-  <div class="w"><span class="l" id="f-evl">Evidencia (hasta 2 capturas)</span><input type="file" id="f-ev" accept="image/*" multiple></div>
+  <div class="w"><span class="l" id="f-evl">Evidencia (hasta 3 capturas · adjunta o pega con Ctrl+V)</span><input type="file" id="f-ev" accept="image/*" multiple></div>
  </div>
  </div>
  <div class="sub" style="margin:-4px 0 10px;font-size:12px">Avance ponderado por prioridad: Alta ×3 · Media ×2 · Baja ×1</div>
@@ -315,7 +316,8 @@ textarea{font:inherit;color:var(--text);width:100%;padding:7px 9px;border:1px so
 </div>
 <div class="wrap" id="v-rfi" style="display:none">
  <div id="rf-list">
-  <div class="ctl2"><div class="rf-tools"><input type="text" id="rf-q" placeholder="Buscar RFI…"><select id="rf-who"></select></div><button class="btn" id="rf-new">＋ Nueva RFI</button></div>
+  <div class="ctl2"><div class="rf-tools"><input type="text" id="rf-q" placeholder="Buscar aclaración…"><select id="rf-who"></select></div><button class="btn" id="rf-new">＋ Nueva aclaración</button></div>
+  <div class="sub" style="margin:-2px 0 10px">Base de consulta del equipo: las aclaraciones <b>cerradas</b> con respuesta oficial son los lineamientos a seguir.</div>
   <div class="chips" id="rf-chips"></div>
   <div class="table" id="rf-body" style="border-left:6px solid var(--blue)"></div>
  </div>
@@ -343,7 +345,7 @@ const MEMBERS=["Jaqui","Carol","Ana","Pao","Ari","Hobbs"];
 const OWNERS=[...MEMBERS,"Sin asignar"];
 const GROUPS=[["actividades","Actividades","#335c67"],["inconsistencias","Inconsistencias","#e09f3e"],["interferencias","Interferencias","#9e2a2b"]];
 const PR={Alta:0,Media:1,Baja:2};
-let db=null,items=[],notes=[],rfis=[],rmsgs=[],view="tab",logs=[],cmts=[],who="Todos",canWrite=true,ready=false,closed={completadas:true},openC={},openF={},editF={},tEdit={},tDraft={},eDraft={},drafts={},names={},uid="anon",assets=null,histOpen=false,seenLog=null;
+let db=null,items=[],notes=[],rfis=[],rmsgs=[],view="tab",logs=[],cmts=[],who="Todos",canWrite=true,ready=false,closed={completadas:true},openCd={},openC={},openF={},editF={},tEdit={},tDraft={},eDraft={},drafts={},names={},uid="anon",assets=null,histOpen=false,seenLog=null;
 const $=id=>document.getElementById(id);
 function setTheme(t){document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}$("th").textContent=t==="dark"?"☀️":"🌙";$("th").title=t==="dark"?"Cambiar a modo claro":"Cambiar a modo oscuro"}
 (function(){let t=null;try{t=localStorage.getItem("theme")}catch(e){}if(!t)t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t;$("th").textContent=t==="dark"?"☀️":"🌙"})();
@@ -411,7 +413,7 @@ const TC={actividades:"#335c67",inconsistencias:"#e09f3e",interferencias:"#9e2a2
 const TL={actividades:"Actividad",inconsistencias:"Inconsistencia",interferencias:"Interferencia"};
 function gotoTask(id){
   closeNote();const o=items.find(i=>i.id===id);if(!o)return;
-  who="Todos";if(o.completada)closed.completadas=false;else closed[o.tipo]=false;
+  who="Todos";if(o.completada){closed.completadas=false;openCd[id]=true}else closed[o.tipo]=false;
   setView("tab");
   setTimeout(()=>{const el=document.querySelector('.row[data-id="'+id+'"]')||document.querySelector('.crow[data-id="'+id+'"]');if(el){el.scrollIntoView({block:"center",behavior:"smooth"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2000)}},60);
 }
@@ -522,9 +524,32 @@ function renderNotes(){
     });
   });
 }
+/* ===== Pegar imágenes con Ctrl+V en los campos de evidencia ===== */
+function flashToast(m){const el=document.createElement("div");el.className="toast";el.textContent=m;$("toasts").appendChild(el);setTimeout(()=>el.remove(),4000)}
+function pasteTarget(el){
+  if(!el||!el.closest)return null;let h;
+  if(el.closest("#nm"))return $("nm").querySelector("#rf-ev");
+  if(el.closest("#addbox"))return $("ficha").style.display!=="none"?$("f-ev"):null;
+  if((h=el.closest(".cmp")))return h.querySelector("#rf-f");
+  if((h=el.closest(".cm")))return h.querySelector("input[data-efile],input[data-img]");
+  return null;
+}
+document.addEventListener("paste",e=>{
+  const cd=e.clipboardData;if(!cd)return;
+  const imgs=[...cd.items].filter(i=>i.kind==="file"&&i.type.startsWith("image/")).map(i=>i.getAsFile()).filter(Boolean);
+  if(!imgs.length||(cd.getData("text/plain")||"").trim())return;
+  const inp=pasteTarget(e.target);if(!inp)return;
+  e.preventDefault();
+  const mk=(f,i)=>new File([f],"captura-"+Date.now()+(i?"-"+i:"")+"."+((f.type||"image/png").split("/")[1]||"png").replace("jpeg","jpg"),{type:f.type||"image/png"});
+  const max=inp.multiple?3:1,all=[...(inp.multiple?[...inp.files]:[]),...imgs.map(mk)];
+  if(all.length>max)flashToast("Máximo "+max+(max===1?" imagen":" capturas"));
+  const keep=inp.multiple?all.slice(0,max):[all[all.length-1]],dt=new DataTransfer();
+  keep.forEach(f=>dt.items.add(f));inp.files=dt.files;
+  inp.dispatchEvent(new Event("change",{bubbles:true}));flashToast("📋 Imagen pegada");
+});
 /* ===== RFIs ===== */
 let rfSel=null,rfFilt="Abiertas",rfWho="Todos",rfQ="",rfDraft="";
-const RFN=r=>"RFI-"+String(r.numero||0).padStart(3,"0"),RFO={Abierta:0,Respondida:1,Cerrada:2},RTEAM="Todo el equipo";
+const RFN=r=>"ACL-"+String(r.numero||0).padStart(3,"0"),RFO={Abierta:0,Respondida:1,Cerrada:2},RTEAM="Todo el equipo";
 const meName=()=>nm(uid);
 const rfBall=r=>r.estado==="Cerrada"?"—":r.estado==="Respondida"?nm(r.creador):r.asignado;
 const rfMine=r=>(r.estado==="Abierta"&&(r.asignado===meName()||(r.asignado===RTEAM&&r.creador!==uid)))||(r.estado==="Respondida"&&r.creador===uid);
@@ -547,33 +572,33 @@ function renderRfi(){
   const total=Math.max(Object.values(names).filter(x=>x.name).length,1);
   $("rf-body").innerHTML=`<div class="rfh"><div>No.</div><div>Título</div><div>Estado</div><div>Dirigido a</div><div>Bola en cancha</div><div>Fecha límite</div><div>💬</div><div>Enterados</div></div>`+
    (L.map(r=>{const late=r.estado!=="Cerrada"&&r.limite&&r.limite<today(),mc=rmsgs.filter(m=>m.rfiid===r.id).length,b=rfBall(r);
-    return`<div class="rfi ${r.estado}" data-id="${esc(r.id)}"><div class="no">${RFN(r)}</div><div class="tt" title="${esc(r.titulo)}">${esc(r.titulo)}${(r.tareas||[]).length?` <small style="color:var(--muted)">🔗${(r.tareas||[]).length}</small>`:""}</div><div class="st"><span class="tagr rs-${r.estado}">${r.estado}</span></div><div class="as">${esc(r.asignado)}</div><div class="bcw"><span class="bc${rfMine(r)?" me":""}">${esc(b)}${rfMine(r)?" ●":""}</span></div><div class="lt${late?" late":""}">${r.limite?fmtD(r.limite):"—"}</div><div class="rmc">💬 ${mc}</div><div class="en2">${(r.enterados||[]).length}/${total}</div></div>`}).join("")||'<div class="empty">No hay RFIs con estos filtros.</div>');
+    return`<div class="rfi ${r.estado}" data-id="${esc(r.id)}"><div class="no">${RFN(r)}</div><div class="tt" title="${esc(r.titulo)}">${esc(r.titulo)}${(r.tareas||[]).length?` <small style="color:var(--muted)">🔗${(r.tareas||[]).length}</small>`:""}</div><div class="st"><span class="tagr rs-${r.estado}">${r.estado}</span></div><div class="as">${esc(r.asignado)}</div><div class="bcw"><span class="bc${rfMine(r)?" me":""}">${esc(b)}${rfMine(r)?" ●":""}</span></div><div class="lt${late?" late":""}">${r.limite?fmtD(r.limite):"—"}</div><div class="rmc">💬 ${mc}</div><div class="en2">${(r.enterados||[]).length}/${total}</div></div>`}).join("")||'<div class="empty">No hay aclaraciones con estos filtros.</div>');
   $("rf-chips").querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{rfFilt=b.dataset.f;renderRfi()});
   $("rf-body").querySelectorAll(".rfi").forEach(el=>el.onclick=()=>{rfSel=el.dataset.id;rfDraft="";renderRfi()});
 }
-function arm2(btn,label,fn){let t;btn.onclick=async()=>{if(!btn.classList.contains("arm")){const o=btn.textContent;btn.classList.add("arm");btn.textContent=label;t=setTimeout(()=>{btn.classList.remove("arm");btn.textContent=o},3000);return}clearTimeout(t);await fn()}}
+function arm2(btn,label,fn){let t;const o=btn.textContent;btn.onclick=async()=>{if(!btn.classList.contains("arm")){btn.classList.add("arm");btn.textContent=label;t=setTimeout(()=>{btn.classList.remove("arm");btn.textContent=o},3000);return}clearTimeout(t);btn.classList.remove("arm");btn.textContent=o;await fn()}}
 function drawRfiDetail(){
   const r=rfis.find(x=>x.id===rfSel);if(!r){rfSel=null;renderRfi();return}
   const keep=document.activeElement&&document.activeElement.id==="rf-t";
   const ms=rmsgs.filter(m=>m.rfiid===r.id).sort((a,b)=>a.ts-b.ts),cr=r.creador===uid,of=ms.find(m=>m.oficial);
   const late=r.estado!=="Cerrada"&&r.limite&&r.limite<today(),refs=[r.nivel,r.ubicacion,(r.disciplinas||[]).join(" × "),r.planos].filter(Boolean).join(" · ");
-  const imgs=[r.evidencia,r.evidencia2].filter(Boolean).map(x=>`<a href="${esc(imgUrl(x))}" target="_blank"><img src="${esc(imgUrl(x))}" alt="Evidencia" style="max-width:280px;max-height:190px;border-radius:8px;margin:8px 8px 0 0;border:1px solid var(--line)"></a>`).join("");
-  const respondable=r.estado!=="Cerrada"&&(r.asignado===meName()||r.asignado===RTEAM),en=r.enterados||[],total=Math.max(Object.values(names).filter(x=>x.name).length,1),yo=en.includes(uid);
+  const imgs=[r.evidencia,r.evidencia2,r.evidencia3].filter(Boolean).map(x=>`<a href="${esc(imgUrl(x))}" target="_blank"><img src="${esc(imgUrl(x))}" alt="Evidencia" style="max-width:280px;max-height:190px;border-radius:8px;margin:8px 8px 0 0;border:1px solid var(--line)"></a>`).join("");
+  const respondable=r.estado!=="Cerrada"&&(r.asignado===meName()||r.asignado===RTEAM||cr),en=r.enterados||[],total=Math.max(Object.values(names).filter(x=>x.name).length,1),yo=en.includes(uid);
   const msg=m=>`<div class="rm${m.oficial?" of":""}">${av(m.uid)}<div class="b"><b>${esc(nm(m.uid))}</b> <span class="tagr tg">${m.tipo==="respuesta"?"Respuesta":"Comentario"}</span>${m.oficial?' <span class="tagr rs-Cerrada">★ Oficial</span>':""}<small>${fdt(m.ts)}</small><div>${esc(m.text)}</div>${m.img?`<a href="${esc(imgUrl(m.img))}" target="_blank"><img src="${esc(imgUrl(m.img))}" alt=""></a>`:""}${cr&&r.estado==="Respondida"&&m.tipo==="respuesta"&&!m.oficial?`<button class="cb" data-of="${esc(m.id)}">★ Marcar como oficial</button>`:""}</div></div>`;
   const lt=(r.tareas||[]).map(t=>items.find(i=>i.id===t)).filter(Boolean);
   const linkBox=`<div class="rfb"><h3>Vinculada a ${lt.length?"("+lt.length+")":""}</h3>${lt.map(i=>`<div class="cp${isDone(i)?" dn":""}" data-go="${esc(i.id)}" style="border-left-color:${TC[i.tipo]};background:${TP[i.tipo]}" title="Ir al Tablero"><i class="pd" style="background:${PD[i.prioridad]||"#999"}"></i><span class="cpt">${esc(i.titulo)}</span><span class="cpm">${TL[i.tipo]} · ${esc(i.estado)} · ${esc(i.responsable)}</span></div>`).join("")||'<div class="sub">Sin vínculos con actividades, inconsistencias ni interferencias.</div>'}<div class="rfa"><button class="btn2" id="rf-lk-ed">✎ Editar vínculos</button></div></div>`;
-  $("rf-det").innerHTML=`<button class="hb" id="rf-back">← Volver a RFIs</button>
+  $("rf-det").innerHTML=`<button class="hb" id="rf-back">← Volver a aclaraciones</button>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0"><span class="no" style="font-weight:700;color:var(--muted)">${RFN(r)}</span><h2 style="margin:0;font-size:20px;flex:1;min-width:200px">${esc(r.titulo)}</h2><span class="tagr rs-${r.estado}" style="font-size:13px">${r.estado}</span></div>
 <div class="rfd"><div>
  ${of?`<div class="rfb of"><h3>Respuesta oficial · validada por ${esc(nm(r.validadapor))}</h3><div style="white-space:pre-wrap">${esc(of.text)}</div></div>`:""}
  <div class="rfb"><h3>Pregunta</h3><div style="white-space:pre-wrap">${esc(r.pregunta)}</div>${imgs}${r.sugerida?`<h3 style="margin-top:12px">Respuesta sugerida por quien pregunta</h3><div style="white-space:pre-wrap">${esc(r.sugerida)}</div>`:""}</div>
  ${linkBox}
  <div class="rfb"><h3>Conversación (${ms.length})</h3>${ms.map(msg).join("")||'<div class="empty" style="padding:8px">Aún no hay respuestas ni comentarios.</div>'}
-  ${r.estado!=="Cerrada"?`<div class="cmp" style="margin-top:10px"><textarea id="rf-t" placeholder="Escribe un comentario${respondable?" o la respuesta":""}…" maxlength="1000">${esc(rfDraft)}</textarea><div class="row2"><label class="btn2" title="Adjuntar imagen" style="cursor:pointer">📎<input type="file" id="rf-f" accept="image/*" hidden></label><button class="btn2" id="rf-c">Comentar</button>${respondable?'<button class="btn2 ok2" id="rf-r">Enviar como respuesta</button>':""}<span class="sub" id="rf-fn"></span></div></div>`:""}
+  ${r.estado!=="Cerrada"?`<div class="cmp" style="margin-top:10px"><textarea id="rf-t" placeholder="Escribe un comentario${respondable?" o la respuesta":""}…" maxlength="1000">${esc(rfDraft)}</textarea><div class="row2"><label class="btn2" title="Adjuntar imagen (o pega una con Ctrl+V)" style="cursor:pointer">📎<input type="file" id="rf-f" accept="image/*" hidden></label><button class="btn2" id="rf-c">Comentar</button>${respondable?'<button class="btn2 ok2" id="rf-r">Enviar como respuesta</button>':""}${cr?'<button class="btn2 ok2" id="rf-o">★ Responder y dejar como oficial</button>':""}<span class="sub" id="rf-fn"></span></div></div>`:""}
  </div></div>
 <div><div class="rfb"><div class="kv"><b>Creada por</b><span>${av(r.creador)} ${esc(nm(r.creador))}</span><b>Fecha</b><span>${fdt(r.creado||0)}</span><b>Dirigido a</b><span>${esc(r.asignado)}</span><b>Bola en cancha</b><span class="bc${rfMine(r)?" me":""}">${esc(rfBall(r))}</span><b>Prioridad</b><span><i class="pd" style="background:${PD[r.prioridad]||"#999"}"></i> ${esc(r.prioridad)}</span><b>Fecha límite</b><span class="lt${late?" late":""}">${r.limite?fmtD(r.limite):"—"}${late?" · vencida":""}</span>${refs?`<b>Referencia</b><span>${esc(refs)}</span>`:""}${r.cerradaat?`<b>Cerrada</b><span>${fdt(r.cerradaat)}</span>`:""}</div></div>
  <div class="rfb"><h3>Enterados ${en.length}/${total}</h3><div class="en">${en.map(u=>av(u)).join("")||'<span class="sub">Nadie aún</span>'}</div><div class="rfa"><button class="btn2${yo?"":" ok2"}" id="rf-en">${yo?"✓ Enterado (quitar)":"Marcar como enterado"}</button></div></div>
- ${cr?`<div class="rfb"><h3>Acciones de quien preguntó</h3><div class="rfa">${r.estado==="Respondida"?'<button class="btn2 ok2" id="rf-val">✓ Validar y cerrar</button><button class="btn2" id="rf-ask">↩ Pedir aclaración</button>':""}${r.estado==="Cerrada"?'<button class="btn2" id="rf-reo">Reabrir</button>':""}<button class="btn2" id="rf-del">Eliminar RFI</button></div></div>`:""}
+ ${cr?`<div class="rfb"><h3>Acciones de quien preguntó</h3><div class="rfa">${r.estado==="Respondida"?'<button class="btn2 ok2" id="rf-val">✓ Validar y cerrar</button><button class="btn2" id="rf-ask">↩ Pedir más información</button>':""}${r.estado==="Cerrada"?'<button class="btn2" id="rf-reo">Reabrir</button>':""}<button class="btn2" id="rf-del">Eliminar aclaración</button></div></div>`:""}
 </div></div>`;
   $("rf-back").onclick=()=>{rfSel=null;renderRfi()};
   $("rf-det").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>gotoTask(b.dataset.go));$("rf-lk-ed").onclick=()=>openLinkEdit(r);
@@ -581,22 +606,30 @@ function drawRfiDetail(){
   const f=$("rf-f");if(f)f.onchange=()=>{$("rf-fn").textContent=f.files[0]?f.files[0].name:""};
   const send=async tipo=>{
     const text=($("rf-t").value||"").trim(),file=f&&f.files[0];if(!text&&!file)return;
-    try{let img=null;if(file){if(file.size>5*1024*1024){note("La imagen supera 5 MB.");return}img=(await assets.upload(file)).id}
+    try{let img=null;if(file){if(file.size>5*1024*1024){flashToast("La imagen supera 5 MB.");return}img=(await assets.upload(file)).id}
       await db.collection("rfi_msgs").doc().set({rfiid:r.id,ts:Date.now(),uid,text,tipo,oficial:false,...(img?{img}:{})});
       if(tipo==="respuesta")await db.doc("rfis/"+r.id).update({estado:"Respondida"});
-      rfDraft="";rfLog(r,tipo==="respuesta"?"respondió la RFI":"comentó en la RFI")}catch(e){note("No se pudo enviar: "+(e&&e.message||e))}
+      rfDraft="";rfLog(r,tipo==="respuesta"?"respondió la aclaración":"comentó en la aclaración")}catch(e){flashToast("No se pudo enviar: "+(e&&e.message||e))}
   };
+  if($("rf-o"))arm2($("rf-o"),"¿Responder y cerrar como oficial?",async()=>{
+    const text=($("rf-t").value||"").trim(),file=f&&f.files[0];
+    if(!text&&!file){flashToast("Escribe la respuesta oficial antes de cerrar.");return}
+    try{let img=null;if(file){if(file.size>5*1024*1024){flashToast("La imagen supera 5 MB.");return}img=(await assets.upload(file)).id}
+      for(const m of ms.filter(m=>m.oficial))await db.doc("rfi_msgs/"+m.id).update({oficial:false});
+      await db.collection("rfi_msgs").doc().set({rfiid:r.id,ts:Date.now(),uid,text,tipo:"respuesta",oficial:true,...(img?{img}:{})});
+      await db.doc("rfis/"+r.id).update({estado:"Cerrada",validadapor:uid,cerradaat:Date.now()});
+      rfDraft="";rfLog(r,"respondió y cerró la aclaración como oficial")}catch(e){flashToast("Error: "+(e&&e.message||e))}});
   if($("rf-c"))$("rf-c").onclick=()=>send("comentario");if($("rf-r"))$("rf-r").onclick=()=>send("respuesta");
-  $("rf-en").onclick=async()=>{const s=new Set(en);s.has(uid)?s.delete(uid):s.add(uid);try{await db.doc("rfis/"+r.id).update({enterados:[...s]})}catch(e){note("Error: "+(e&&e.message||e))}};
-  $("rf-det").querySelectorAll("[data-of]").forEach(b=>b.onclick=async()=>{try{for(const m of ms.filter(m=>m.oficial))await db.doc("rfi_msgs/"+m.id).update({oficial:false});await db.doc("rfi_msgs/"+b.dataset.of).update({oficial:true})}catch(e){note("Error: "+(e&&e.message||e))}});
+  $("rf-en").onclick=async()=>{const s=new Set(en);s.has(uid)?s.delete(uid):s.add(uid);try{await db.doc("rfis/"+r.id).update({enterados:[...s]})}catch(e){flashToast("Error: "+(e&&e.message||e))}};
+  $("rf-det").querySelectorAll("[data-of]").forEach(b=>b.onclick=async()=>{try{for(const m of ms.filter(m=>m.oficial))await db.doc("rfi_msgs/"+m.id).update({oficial:false});await db.doc("rfi_msgs/"+b.dataset.of).update({oficial:true})}catch(e){flashToast("Error: "+(e&&e.message||e))}});
   const reset=async()=>{for(const m of ms.filter(m=>m.oficial))await db.doc("rfi_msgs/"+m.id).update({oficial:false})};
   if($("rf-val"))arm2($("rf-val"),"¿Validar y cerrar?",async()=>{
     const resp=ms.filter(m=>m.tipo==="respuesta");let o=resp.find(m=>m.oficial);if(!o&&resp.length===1)o=resp[0];
-    if(!o){note("Marca con ★ cuál respuesta es la oficial antes de validar.");return}
-    try{if(!o.oficial)await db.doc("rfi_msgs/"+o.id).update({oficial:true});await db.doc("rfis/"+r.id).update({estado:"Cerrada",validadapor:uid,cerradaat:Date.now()});rfLog(r,"validó y cerró la RFI")}catch(e){note("Error: "+(e&&e.message||e))}});
-  if($("rf-ask"))arm2($("rf-ask"),"¿Pedir aclaración?",async()=>{try{await reset();await db.doc("rfis/"+r.id).update({estado:"Abierta"});rfLog(r,"pidió aclaración en la RFI")}catch(e){note("Error: "+(e&&e.message||e))}});
-  if($("rf-reo"))arm2($("rf-reo"),"¿Reabrir?",async()=>{try{await reset();await db.doc("rfis/"+r.id).update({estado:"Abierta",validadapor:null,cerradaat:null});rfLog(r,"reabrió la RFI")}catch(e){note("Error: "+(e&&e.message||e))}});
-  if($("rf-del"))arm2($("rf-del"),"¿Eliminar definitivamente?",async()=>{try{for(const m of ms)await db.doc("rfi_msgs/"+m.id).delete();await db.doc("rfis/"+r.id).delete();rfLog(r,"eliminó la RFI");rfSel=null;renderRfi()}catch(e){note("Error: "+(e&&e.message||e))}});
+    if(!o){flashToast("Marca con ★ cuál respuesta es la oficial antes de validar.");return}
+    try{if(!o.oficial)await db.doc("rfi_msgs/"+o.id).update({oficial:true});await db.doc("rfis/"+r.id).update({estado:"Cerrada",validadapor:uid,cerradaat:Date.now()});rfLog(r,"validó y cerró la aclaración")}catch(e){flashToast("Error: "+(e&&e.message||e))}});
+  if($("rf-ask"))arm2($("rf-ask"),"¿Pedir más información?",async()=>{try{await reset();await db.doc("rfis/"+r.id).update({estado:"Abierta"});rfLog(r,"pidió más información en la aclaración")}catch(e){flashToast("Error: "+(e&&e.message||e))}});
+  if($("rf-reo"))arm2($("rf-reo"),"¿Reabrir?",async()=>{try{await reset();await db.doc("rfis/"+r.id).update({estado:"Abierta",validadapor:null,cerradaat:null});rfLog(r,"reabrió la aclaración")}catch(e){flashToast("Error: "+(e&&e.message||e))}});
+  if($("rf-del"))arm2($("rf-del"),"¿Eliminar definitivamente?",async()=>{try{for(const m of ms)await db.doc("rfi_msgs/"+m.id).delete();await db.doc("rfis/"+r.id).delete();rfLog(r,"eliminó la aclaración");rfSel=null;renderRfi()}catch(e){flashToast("Error: "+(e&&e.message||e))}});
 }
 function linkPicker(host,sel){
   host.innerHTML='<input type="text" class="lq" placeholder="Buscar actividad, inconsistencia o interferencia…"><div class="tl"></div>';
@@ -609,11 +642,11 @@ function openLinkEdit(r){
   const sel=[...(r.tareas||[])];$("nm").style.display="flex";nDraft=null;
   $("nmc").innerHTML=`<h2>Vincular ${RFN(r)}</h2><p>Elige las actividades, inconsistencias o interferencias relacionadas.</p><div id="lk-h"></div><div class="err" id="nm-e"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="lk-save">Guardar</button><button class="cb" id="nm-cancel">Cancelar</button></div>`;
   linkPicker($("lk-h"),sel);$("nm-cancel").onclick=closeNote;
-  $("lk-save").onclick=async()=>{try{await db.doc("rfis/"+r.id).update({tareas:sel});closeNote();rfLog(r,"actualizó los vínculos de la RFI")}catch(e){$("nm-e").textContent="Error: "+(e&&e.message||e)}}
+  $("lk-save").onclick=async()=>{try{await db.doc("rfis/"+r.id).update({tareas:sel});closeNote();rfLog(r,"actualizó los vínculos de la aclaración")}catch(e){$("nm-e").textContent="Error: "+(e&&e.message||e)}}
 }
 function openRfiForm(){
   $("nm").style.display="flex";nDraft=null;
-  $("nmc").innerHTML=`<h2>Nueva RFI</h2><p>Una pregunta para el equipo. Quedará visible para todos.</p>
+  $("nmc").innerHTML=`<h2>Nueva aclaración</h2><p>Una duda para el equipo. Quedará como consulta visible para todos.</p>
 <span class="l req">Título</span><input type="text" id="rf-ti" maxlength="140" placeholder="Resumen corto de la duda">
 <span class="l req">Pregunta</span><textarea id="rf-pr" maxlength="1200" placeholder="Explica qué necesitas saber y por qué"></textarea>
 <span class="l">Respuesta sugerida (opcional)</span><textarea id="rf-su" maxlength="1200"></textarea>
@@ -622,19 +655,19 @@ function openRfiForm(){
 <span class="l">Ubicación / planos de referencia (opcional)</span><input type="text" id="rf-ub" maxlength="150" placeholder="Ej. Eje B-4 · A-201, E-105">
 <span class="l">Disciplinas (opcional)</span><div class="dsc" id="rf-di" style="margin-bottom:10px">${["Arquitectura","Estructural","MEP","Topográfico"].map(x=>`<label><input type="checkbox" value="${x}">${x}</label>`).join("")}</div>
 <span class="l">Vincular a actividades, inconsistencias o interferencias (opcional)</span><div id="rf-lk" style="margin-bottom:10px"></div>
-<span class="l">Evidencia (hasta 2 capturas, opcional)</span><input type="file" id="rf-ev" accept="image/*" multiple>
-<div class="err" id="nm-e"></div><div style="display:flex;gap:8px"><button class="btn" id="rf-save">Crear RFI</button><button class="cb" id="nm-cancel">Cancelar</button></div>`;
+<span class="l">Evidencia (hasta 3 capturas, opcional · adjunta o pega con Ctrl+V)</span><input type="file" id="rf-ev" accept="image/*" multiple>
+<div class="err" id="nm-e"></div><div style="display:flex;gap:8px"><button class="btn" id="rf-save">Crear aclaración</button><button class="cb" id="nm-cancel">Cancelar</button></div>`;
   $("nm-cancel").onclick=closeNote;const lk=[];linkPicker($("rf-lk"),lk);
   $("rf-d").onchange=$("rf-d").oninput=()=>{const v=$("rf-d").value;$("rf-dv").textContent=fmtD(v)||"dd/mm/aaaa";$("rf-dv").classList.toggle("ph",!v)};
   $("rf-save").onclick=async()=>{
     const g=i=>$(i).value.trim(),titulo=g("rf-ti"),pregunta=g("rf-pr"),files=[...$("rf-ev").files];
     if(!titulo||!pregunta){$("nm-e").textContent="Escribe el título y la pregunta.";return}
-    if(files.length>2||files.some(f=>f.size>5*1024*1024)){$("nm-e").textContent="Máximo 2 imágenes de menos de 5 MB.";return}
+    if(files.length>3||files.some(f=>f.size>5*1024*1024)){$("nm-e").textContent="Máximo 3 imágenes de menos de 5 MB.";return}
     $("rf-save").disabled=true;
     try{
       const d={titulo,pregunta,sugerida:g("rf-su"),asignado:$("rf-as").value,prioridad:$("rf-pi").value,limite:$("rf-d").value||"",estado:"Abierta",creador:uid,creado:Date.now(),enterados:[uid],nivel:$("rf-nv").value||null,ubicacion:g("rf-ub")||null,disciplinas:[...document.querySelectorAll("#rf-di input:checked")].map(x=>x.value),tareas:lk};
-      const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);if(ids[0])d.evidencia=ids[0];if(ids[1])d.evidencia2=ids[1];
-      const ref=db.collection("rfis").doc();await ref.set(d);closeNote();logc({titulo:"RFI · "+titulo},"creó una RFI dirigida a "+d.asignado,ref.id);
+      const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);if(ids[0])d.evidencia=ids[0];if(ids[1])d.evidencia2=ids[1];if(ids[2])d.evidencia3=ids[2];
+      const ref=db.collection("rfis").doc();await ref.set(d);closeNote();logc({titulo:"Aclaración · "+titulo},"creó una aclaración dirigida a "+d.asignado,ref.id);
     }catch(e){$("nm-e").textContent="No se pudo crear: "+(e&&e.message||e);$("rf-save").disabled=false}
   };
 }
@@ -706,11 +739,11 @@ $("f-add").onclick=async()=>{
     files=[...$("f-ev").files];
     const miss=[];if(!d.nivel)miss.push("Nivel");if(!d.ubicacion)miss.push("Ubicación");if(!d.disciplinas.length)miss.push("Disciplinas");if(!d.planos)miss.push("Planos");if(!d.descripcion)miss.push("Descripción");if(assets&&!files.length)miss.push("Evidencia");
     if(miss.length){note("Faltan campos obligatorios: "+miss.join(", "));return}
-    if(files.length>2){note("Máximo 2 capturas.");return}if(files.some(f=>f.size>5*1024*1024)){note("Cada imagen debe pesar menos de 5 MB.");return}
+    if(files.length>3){note("Máximo 3 capturas.");return}if(files.some(f=>f.size>5*1024*1024)){note("Cada imagen debe pesar menos de 5 MB.");return}
   }
   $("f-add").disabled=true;
   try{
-    if(files.length){const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);d.evidencia=ids[0];if(ids[1])d.evidencia2=ids[1]}
+    if(files.length){const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);d.evidencia=ids[0];if(ids[1])d.evidencia2=ids[1];if(ids[2])d.evidencia3=ids[2]}
     const ref=db.collection("items").doc();await ref.set(d);
     $("f-t").value="";$("addbox").classList.remove("open");["f-ub","f-pl","f-cv","f-el","f-ds"].forEach(i=>$(i).value="");$("f-nv").value="";$("f-ev").value="";document.querySelectorAll("#f-dis input").forEach(x=>x.checked=false);note(canWrite?"":"Acceso de solo lectura.");
     logc(d,tipo==="actividades"?"creó la tarea (resp. "+d.responsable+")":"registró en "+tipo+" · "+d.nivel+" (resp. "+d.responsable+")",ref.id)}
@@ -725,21 +758,25 @@ async function saveEdit(id){
   const miss=[];if(!d.titulo.trim())miss.push("Título");if(!d.nivel)miss.push("Nivel");if(!d.ubicacion.trim())miss.push("Ubicación");if(!d.disciplinas.length)miss.push("Disciplinas");if(!d.planos.trim())miss.push("Planos");if(!d.descripcion.trim())miss.push("Descripción");
   if(miss.length){note("Faltan campos obligatorios: "+miss.join(", "));return}
   const files=[...(((document.querySelector('[data-efile="'+id+'"]')||{}).files)||[])];
-  if(files.length>2){note("Máximo 2 capturas.");return}if(files.some(f=>f.size>5*1024*1024)){note("Cada imagen debe pesar menos de 5 MB.");return}
+  if(files.length>3){note("Máximo 3 capturas.");return}if(files.some(f=>f.size>5*1024*1024)){note("Cada imagen debe pesar menos de 5 MB.");return}
   const patch={titulo:d.titulo.trim(),nivel:d.nivel,ubicacion:d.ubicacion.trim(),planos:d.planos.trim(),corte:(d.corte||"").trim(),elemento:o.tipo==="interferencias"?(d.elemento||"").trim():"",descripcion:d.descripcion.trim(),disciplinas:d.disciplinas};
   const L={titulo:"título",nivel:"nivel",ubicacion:"ubicación",planos:"planos",corte:"corte/vista",elemento:"ID de elemento",descripcion:"descripción",disciplinas:"disciplinas"};
   const ch=Object.keys(L).filter(k=>k==="disciplinas"?patch[k].join()!==(o[k]||[]).join():(patch[k]||"")!==(o[k]||"")).map(k=>L[k]);
   try{
-    if(files.length){const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);patch.evidencia=ids[0];patch.evidencia2=ids[1]||"";ch.push("evidencia")}
+    if(files.length){const ids=[];for(const f of files)ids.push((await assets.upload(f)).id);patch.evidencia=ids[0];patch.evidencia2=ids[1]||"";patch.evidencia3=ids[2]||"";ch.push("evidencia")}
     if(ch.length)await upd(id,patch,"editó la ficha ("+ch.join(", ")+")");
     delete eDraft[id];delete editF[id];note(canWrite?"":"Acceso de solo lectura.");render();
   }catch(e){note("No se pudo guardar la edición: "+(e&&e.message||e))}
+}
+function cdetail(i){
+  const nc=cmts.filter(c=>c.itemId===i.id),imgs=[i.evidencia,i.evidencia2,i.evidencia3].filter(Boolean),kv=(k,v)=>v?`<div><b>${k}</b>${esc(v)}</div>`:"";
+  return `<div class="cm"><div class="dg">${kv("Tipo",TL[i.tipo])}${kv("Responsable",i.responsable)}${kv("Prioridad",i.prioridad)}${kv("Deadline",fmtD(i.deadline))}${kv("Creada",i.creado?fdt(i.creado):"")}${kv("Completada",i.completadaAt?fdt(i.completadaAt)+(i.completadaBy?" por "+nm(i.completadaBy):""):"")}${kv("Nivel",i.nivel)}${kv("Ubicación",i.ubicacion)}${kv("Disciplinas",(i.disciplinas||[]).join(", "))}${kv("Planos",i.planos)}${kv("Corte / vista",i.corte)}${kv("ID de elemento",i.elemento)}</div>${i.descripcion?`<span class="dl2">Descripción</span><div style="white-space:pre-wrap">${esc(i.descripcion)}</div>`:""}${imgs.length?`<span class="dl2" style="margin-top:8px">Evidencia</span><div style="display:flex;gap:8px;flex-wrap:wrap">${imgs.map(x=>`<a href="${esc(imgUrl(x))}" target="_blank"><img src="${esc(imgUrl(x))}" alt="Evidencia" style="max-width:260px;max-height:180px;border-radius:8px;margin-top:6px;border:1px solid var(--line)"></a>`).join("")}</div>`:""}<span class="dl2" style="margin-top:10px">Comentarios (${nc.length})</span>${nc.map(c=>`<div class="cmi">${av(c.uid)}<div class="b"><b>${esc(nm(c.uid))}</b><small>${fdt(c.ts)}</small><div>${esc(c.text)}</div>${c.img?`<a href="${esc(imgUrl(c.img))}" target="_blank"><img src="${esc(imgUrl(c.img))}" alt=""></a>`:""}</div></div>`).join("")||'<div class="sub">Sin comentarios.</div>'}</div>`;
 }
 function completedHtml(){
   const k="completadas",total=items.filter(i=>i.completada).length;
   const list=items.filter(i=>i.completada&&(who==="Todos"||i.responsable===who)).sort((a,b)=>(b.completadaAt||0)-(a.completadaAt||0));
   const TL={actividades:"Actividad",inconsistencias:"Inconsistencia",interferencias:"Interferencia"};
-  const rows=list.map(i=>`<div class="crow" data-id="${esc(i.id)}"><div><span class="t">${esc(i.titulo)}</span>${i.nivel?`<small class="sum">${esc([i.nivel,i.ubicacion,(i.disciplinas||[]).join(" × "),i.planos].filter(Boolean).join(" · "))}</small>`:""}</div><div><span class="tag2">${TL[i.tipo]||""}</span></div><div>${esc(i.responsable)}</div><div class="cby"><span>${i.completadaBy?av(i.completadaBy)+" "+esc(nm(i.completadaBy)):""}</span><small class="sum">${i.completadaAt?fdt(i.completadaAt):""}</small></div><div><button class="cb" data-reopen="${esc(i.id)}" title="Reabrir">↩</button><button class="x" data-cdel="${esc(i.id)}" title="Borrar">✕</button></div></div>`).join("");
+  const rows=list.map(i=>`<div class="crow" data-id="${esc(i.id)}"><div><span class="t cl2" data-cdet="${esc(i.id)}" title="Ver detalle">${openCd[i.id]?"▾":"▸"} ${esc(i.titulo)}</span>${i.nivel?`<small class="sum">${esc([i.nivel,i.ubicacion,(i.disciplinas||[]).join(" × "),i.planos].filter(Boolean).join(" · "))}</small>`:""}</div><div><span class="tag2">${TL[i.tipo]||""}</span></div><div>${esc(i.responsable)}</div><div class="cby"><span>${i.completadaBy?av(i.completadaBy)+" "+esc(nm(i.completadaBy)):""}</span><small class="sum">${i.completadaAt?fdt(i.completadaAt):""}</small></div><div><button class="cb" data-reopen="${esc(i.id)}" title="Reabrir">↩</button><button class="x" data-cdel="${esc(i.id)}" title="Borrar">✕</button></div></div>${openCd[i.id]?cdetail(i):""}`).join("");
   return `<div class="group" style="--gc:#329cb8"><div class="gh ${closed[k]?"closed":""}" data-g="${k}"><span class="arrow">▼</span><h2>✓ Completadas</h2><span class="cnt">${total} en total</span></div>${closed[k]?"":`<div class="table"><div class="cols c"><div>Tarea</div><div>Tipo</div><div>Responsable</div><div>Completada</div><div></div></div>${rows||'<div class="empty">Aún no hay tareas completadas.</div>'}</div>`}</div>`;
 }
 function initDraft(id){const o=items.find(i=>i.id===id)||{};eDraft[id]={titulo:o.titulo||"",nivel:o.nivel||"",ubicacion:o.ubicacion||"",planos:o.planos||"",corte:o.corte||"",elemento:o.elemento||"",descripcion:o.descripcion||"",disciplinas:[...(o.disciplinas||[])]};editF[id]=true}
@@ -806,16 +843,16 @@ function renderTab(){
 ${k==="interferencias"?`<div><span class="l">ID de elemento</span><input type="text" ${e("elemento")} value="${esc(d.elemento)}" maxlength="150"></div>`:""}
 <div class="w"><span class="l req">Disciplinas involucradas</span><div class="dsc">${["Arquitectura","Estructural","MEP","Topográfico"].map(x=>`<label><input type="checkbox" data-e="${id}|dis|${x}" value="${x}" ${(d.disciplinas||[]).includes(x)?"checked":""}>${x}</label>`).join("")}</div></div>
 <div class="w"><span class="l req">Descripción</span><textarea ${e("descripcion")} maxlength="800">${esc(d.descripcion)}</textarea></div>
-${assets?`<div class="w"><span class="l">Evidencia${i.evidencia?" (opcional: reemplaza las actuales, hasta 2)":" (hasta 2 capturas)"}</span><input type="file" accept="image/*" multiple data-efile="${id}"></div>`:""}
+${assets?`<div class="w"><span class="l">Evidencia${i.evidencia?" (opcional: reemplaza las actuales, hasta 3":" (hasta 3 capturas"} · adjunta o pega con Ctrl+V)</span><input type="file" accept="image/*" multiple data-efile="${id}"></div>`:""}
 </div><div style="display:flex;gap:6px;margin-top:8px"><button class="btn" data-esave="${id}">Guardar cambios</button><button class="cb" data-ecancel="${id}">Cancelar</button></div></div>`;
         }else{
-          fic=`<div class="cm"><div class="dg"><div><b>Nivel</b>${esc(i.nivel)}</div><div><b>Ubicación</b>${esc(i.ubicacion)}</div><div><b>Disciplinas</b>${esc((i.disciplinas||[]).join(", "))}</div><div><b>Planos</b>${esc(i.planos)}</div>${i.corte?`<div><b>Corte / vista</b>${esc(i.corte)}</div>`:""}${i.elemento?`<div><b>ID de elemento</b>${esc(i.elemento)}</div>`:""}</div><span class="dl2">Descripción</span><div>${esc(i.descripcion)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${[i.evidencia,i.evidencia2].filter(Boolean).map(x=>`<a href="${esc(imgUrl(x))}" target="_blank"><img src="${esc(imgUrl(x))}" alt="Evidencia" style="max-width:300px;max-height:210px;border-radius:8px;margin-top:8px;border:1px solid var(--line)"></a>`).join("")}</div><div style="margin-top:8px"><button class="cb" data-edit="${esc(i.id)}" ${dis}>✎ Editar ficha</button></div></div>`;
+          fic=`<div class="cm"><div class="dg"><div><b>Nivel</b>${esc(i.nivel)}</div><div><b>Ubicación</b>${esc(i.ubicacion)}</div><div><b>Disciplinas</b>${esc((i.disciplinas||[]).join(", "))}</div><div><b>Planos</b>${esc(i.planos)}</div>${i.corte?`<div><b>Corte / vista</b>${esc(i.corte)}</div>`:""}${i.elemento?`<div><b>ID de elemento</b>${esc(i.elemento)}</div>`:""}</div><span class="dl2">Descripción</span><div>${esc(i.descripcion)}</div><div style="display:flex;gap:8px;flex-wrap:wrap">${[i.evidencia,i.evidencia2,i.evidencia3].filter(Boolean).map(x=>`<a href="${esc(imgUrl(x))}" target="_blank"><img src="${esc(imgUrl(x))}" alt="Evidencia" style="max-width:300px;max-height:210px;border-radius:8px;margin-top:8px;border:1px solid var(--line)"></a>`).join("")}</div><div style="margin-top:8px"><button class="cb" data-edit="${esc(i.id)}" ${dis}>✎ Editar ficha</button></div></div>`;
         }
       }
       const nc=cmts.filter(c=>c.itemId===i.id),recent=i.lastAt&&now-i.lastAt<864e5;
       const slider=k==="actividades"?`<input type="range" min="0" max="100" step="5" value="${p}" data-f="progreso" ${dis}>`:"";
       const cm=openC[i.id]?`<div class="cm">${nc.map(c=>`<div class="cmi">${av(c.uid)}<div class="b"><b>${esc(nm(c.uid))}</b><small>${fdt(c.ts)}</small><div>${esc(c.text)}</div>${c.img?`<a href="${esc(imgUrl(c.img))}" target="_blank"><img src="${esc(imgUrl(c.img))}" alt="Evidencia"></a>`:""}</div></div>`).join("")||'<div class="empty" style="padding:4px">Sin comentarios.</div>'}
-<div class="cin"><input type="text" data-cin="${esc(i.id)}" placeholder="Comentario (plano, nivel, eje, corte…)" value="${esc(drafts[i.id]||"")}" ${dis}>${assets&&canWrite?`<label title="Adjuntar imagen">📎<input type="file" accept="image/*" data-img="${esc(i.id)}" hidden></label>`:""}<button class="btn" data-send="${esc(i.id)}" ${dis}>Enviar</button></div></div>`:"";
+<div class="cin"><input type="text" data-cin="${esc(i.id)}" placeholder="Comentario (o pega una captura con Ctrl+V)" value="${esc(drafts[i.id]||"")}" ${dis}>${assets&&canWrite?`<label title="Adjuntar imagen">📎<input type="file" accept="image/*" data-img="${esc(i.id)}" hidden></label>`:""}<button class="btn" data-send="${esc(i.id)}" ${dis}>Enviar</button></div></div>`:"";
       return`<div class="row ${done?"done":""}" data-id="${esc(i.id)}">
 <div>${tEdit[i.id]?`<input type="text" class="ti" data-t="${esc(i.id)}" value="${esc(tDraft[i.id]!=null?tDraft[i.id]:i.titulo)}" maxlength="200"><button class="cb" data-tsave="${esc(i.id)}">Guardar</button><button class="cb" data-tcancel="${esc(i.id)}">✕</button>`:`<span class="t ${hasF?"cl":""}" ${hasF?'title="Ver ficha"':""}>${esc(i.titulo)}${sum?`<small class="sum">${esc(sum)}</small>`:""}</span><button class="cb pe" data-tedit="${esc(i.id)}" ${dis} title="Editar">✎</button>`}${recent&&i.lastBy?`<span title="${esc(nm(i.lastBy))}: ${esc(i.lastText||"modificó")} · ${fdt(i.lastAt)}">${av(i.lastBy,i.lastBy!==uid&&now-i.lastAt<3e5?"new":"")}</span>`:""}</div>
 <div><span class="m">Responsable</span><select class="pill who${i.responsable==="Sin asignar"?" un":""}" data-f="responsable" ${dis}>${opts(OWNERS,i.responsable)}</select></div>
@@ -857,6 +894,7 @@ ${closed[k]?"":`<div class="table"><div class="cols"><div>Tarea</div><div>Respon
       clearTimeout(t);const o=cur();try{await db.doc("items/"+id).delete();logc(o,"eliminó la tarea",id)}catch(e){note("No se pudo borrar: "+(e&&e.message||e))}
     };
   });
+  $("groups").querySelectorAll("[data-cdet]").forEach(b=>b.onclick=()=>{openCd[b.dataset.cdet]=!openCd[b.dataset.cdet];render()});
   $("groups").querySelectorAll("[data-reopen]").forEach(b=>b.onclick=()=>{const id=b.dataset.reopen,o=items.find(i=>i.id===id)||{};upd(id,{completada:false,completadaAt:null,completadaBy:null,estado:o.tipo==="interferencias"?"Detectada":"Pendiente",progreso:0},"reabrió la tarea")});
   $("groups").querySelectorAll("[data-cdel]").forEach(b=>{let t;b.onclick=async()=>{
     if(!b.classList.contains("arm")){b.classList.add("arm");b.textContent="¿Seguro?";t=setTimeout(()=>{b.classList.remove("arm");b.textContent="✕"},3000);return}
